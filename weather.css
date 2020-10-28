@@ -1,0 +1,12 @@
+.blueish {
+    /*-fx-background-color: rgba(34,167,240,0.8);*/
+    -fx-background-color: rgba(0, 0, 30, 0.3);
+    -fx-background-radius: 10px;
+    -fx-padding: 0 10px 0 10px;
+}
+
+.details {
+    /*-fx-background-color: rgba(34,167,240,0.8);*/
+    -fx-background-color: rgba(0, 0, 30, 0.3);
+    -fx-background-radius: 10px;
+}
