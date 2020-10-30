@@ -1,12 +1,95 @@
-.blueish {
-    /*-fx-background-color: rgba(34,167,240,0.8);*/
-    -fx-background-color: rgba(0, 0, 30, 0.3);
+#bgFilter {
+    -fx-background-color: rgba(35, 147, 244, 0.3);
+}
+
+.color0 {
+    -fx-background-color: rgba(6, 56, 100, 0.4);
+    -fx-background-radius: 10px;
+    -fx-padding: 0 10px 0 10px;
+}
+.color1 {
+    -fx-background-color: rgba(35, 117, 188, 0.4);
+    -fx-background-radius: 10px;
+    -fx-padding: 0 10px 0 10px;
+}
+.color2 {
+    -fx-background-color: rgba(17, 64, 104, 0.6);
+    -fx-background-radius: 10px;
+    -fx-padding: 0 10px 0 10px;
+}
+.color3 {
+    -fx-background-color: rgba(58, 145, 211, 0.4);
+    -fx-background-radius: 10px;
+    -fx-padding: 0 10px 0 10px;
+}
+.color4 {
+    -fx-background-color: rgba(39, 75, 103, 0.8);
+    -fx-background-radius: 10px;
+    -fx-padding: 0 10px 0 10px;
+}
+.color5 {
+    -fx-background-color: rgba(39, 133, 205, 0.4);
+    -fx-background-radius: 10px;
+    -fx-padding: 0 10px 0 10px;
+}
+.color6 {
+    -fx-background-color: rgba(105, 144, 195, 0.7);
+    -fx-background-radius: 10px;
+    -fx-padding: 0 10px 0 10px;
+}
+.color7 {
+    -fx-background-color: rgba(55, 100, 158, 0.7);
+    -fx-background-radius: 10px;
+    -fx-padding: 0 10px 0 10px;
+}
+.color8 {
+    -fx-background-color: rgba(16, 161, 218, 0.8);
+    -fx-background-radius: 10px;
+    -fx-padding: 0 10px 0 10px;
+}
+.color9 {
+    -fx-background-color: rgba(11, 119, 162, 0.7);
+    -fx-background-radius: 10px;
+    -fx-padding: 0 10px 0 10px;
+}
+.color10 {
+    -fx-background-color: rgba(71, 120, 183, 0.5);
+    -fx-background-radius: 10px;
+    -fx-padding: 0 10px 0 10px;
+}
+.color11 {
+    -fx-background-color: rgba(13, 29, 62, 0.4);
     -fx-background-radius: 10px;
     -fx-padding: 0 10px 0 10px;
 }
 
-.details {
-    /*-fx-background-color: rgba(34,167,240,0.8);*/
-    -fx-background-color: rgba(0, 0, 30, 0.3);
-    -fx-background-radius: 10px;
+Button {
+    -fx-cursor: hand;
+    -fx-background-color: rgba(0, 0, 0, 0);
+    -fx-background-radius: 12;
+    -fx-border-radius: 12;
+    -fx-border-width: 1;
+    -fx-border-style: solid;
+    -fx-border-color: white;
+    -fx-text-fill: white;
+    -fx-font-size: 16;
+    -fx-padding: 0;
+}
+
+Button:hover {
+    -fx-background-color: rgba(255, 255, 255, 1);
+    -fx-text-fill: darkblue;
+}
+
+#refresh {
+    -fx-font-size: 24;
+    -fx-background-radius: 18;
+    -fx-border-radius: 18;
+}
+
+#refresh:pressed {
+    -fx-border-color: rgba(0, 0, 0, 0);
+    -fx-background-color: rgba(0, 0, 0, 0);
+    -fx-text-fill: white;
+    -fx-rotate: 180;
 }

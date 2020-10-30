@@ -17,6 +17,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.Label;
@@ -25,6 +26,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
@@ -39,6 +41,7 @@ public class FXMLDocumentController implements Initializable {
     
     @FXML AnchorPane anchPane;
     @FXML Pane bgPane;
+    @FXML Pane bgFilter;
     @FXML Button moreBtn;
     @FXML Button currentBtn;
     @FXML Button refresh;
@@ -48,6 +51,7 @@ public class FXMLDocumentController implements Initializable {
     @FXML Label currentC;
     @FXML Label currentW;
     @FXML Pane currentIcon;
+    @FXML Pane detailsPane;
     @FXML Label updated;
     @FXML Label feels;
     @FXML Label wind;
@@ -58,12 +62,15 @@ public class FXMLDocumentController implements Initializable {
     @FXML Label humidity;
     @FXML Label dewpoint;
     @FXML Label uvindex;
+    @FXML Pane sunrisePane;
     @FXML Label sunrise;
     @FXML Pane sunUp;
+    @FXML Pane sunsetPane;
     @FXML Label sunset;
     @FXML Pane sunDown;
     @FXML Button slideButtonForward;
     @FXML Button slideButtonBack;
+    @FXML Pane sliderBg;
     @FXML Pane slider;
     @FXML Pane sliderTemps;
     @FXML Pane sliderLines;
@@ -76,6 +83,7 @@ public class FXMLDocumentController implements Initializable {
     @FXML Pane dailyDesc;
     @FXML Pane dailyWind;
     @FXML Pane dailyTemp;
+    @FXML HBox dayRows;
     
     @FXML private void goToMorePage(ActionEvent event) { //go to 2nd page
         currentPage.setVisible(false);
@@ -105,13 +113,13 @@ public class FXMLDocumentController implements Initializable {
         TranslateTransition transition = new TranslateTransition(Duration.millis(500), slider);
         if(slided == false) {
             transition.setToX(-1200);
-            slideButton.setText("<");
-            slideButton.setLayoutX(1210);
+            slideButton.setText(String.valueOf(arrow_left));
+            slideButton.setLayoutX(1235);
             slided = true;
         } else {
             transition.setToX(0);
-            slideButton.setText(">");
-            slideButton.setLayoutX(1120);
+            slideButton.setText(String.valueOf(arrow_right));
+            slideButton.setLayoutX(1145);
             slided = false;
         }
         transition.play();
@@ -121,6 +129,8 @@ public class FXMLDocumentController implements Initializable {
     private static JSONObject json;
     private static char deg = '\u00B0';
     private static char reload = '\u21BB';
+    private static char arrow_right = '\u2bc8';
+    private static char arrow_left = '\u2bc7';
     private static ArrayList<String> icons = new ArrayList<String>(Arrays.asList(
         "icons8-sun-100.png",
         "icons8-moon-and-stars-100.png",
@@ -155,10 +165,8 @@ public class FXMLDocumentController implements Initializable {
         "fog_day.jpeg",
         "fog_night.jpg"
     ));
-    
+        
     Boolean slided = false;
-    Line lineTemp1;
-    Line lineTemp2;
     
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -168,6 +176,8 @@ public class FXMLDocumentController implements Initializable {
     private void startApp() {
         city.setText("Budapest");
         refresh.setText(String.valueOf(reload));
+        moreBtn.setText("Next week " + arrow_right);
+        currentBtn.setText(arrow_left + " Current");
         getData("47.5000", "19.0833", "7c80f570e5255fa7e8ab6ee9b041e827");
         WeatherData weatherdata = new WeatherData(json); //create object from json
         setCurrentData(weatherdata); //set first page
@@ -183,7 +193,7 @@ public class FXMLDocumentController implements Initializable {
         try {
             myurl = new URL("https://api.openweathermap.org/data/2.5/onecall?lat=" + lat + "&lon=" + lon + "&units=metric&lang=en&appid=" + appid);
             
-            System.out.println(myurl);
+            //System.out.println(myurl);
             
             connection = (HttpURLConnection) myurl.openConnection();
             connection.setRequestMethod("GET");
@@ -191,7 +201,7 @@ public class FXMLDocumentController implements Initializable {
             connection.setReadTimeout(5000);
             
             int status = connection.getResponseCode();
-            System.out.println("HTTP response code: " + status);
+            //System.out.println("HTTP response code: " + status);
             
             if(status > 299) {
                 reader = new BufferedReader(new InputStreamReader(connection.getErrorStream()));
@@ -230,19 +240,47 @@ public class FXMLDocumentController implements Initializable {
     }
     
     private void setCurrentData(WeatherData data) {
+        slideButton.setText(String.valueOf(arrow_right));
+        int bgNum = pickBg(data.getCurrent().getJSONArray("weather").getJSONObject(0).getString("icon"));
         
-        loadBackground(bgPane, pickBg(data.getCurrent().getJSONArray("weather").getJSONObject(0).getString("icon")));
-        //loadBackground(bgPane, 5);
+        currentIcon.getStyleClass().clear();
+        currentIcon.getStyleClass().add("color" + bgNum);
+        
+        detailsPane.getStyleClass().clear();
+        detailsPane.getStyleClass().add("color" + bgNum);
+        
+        sunrisePane.getStyleClass().clear();
+        sunrisePane.getStyleClass().add("color" + bgNum);
+        
+        sunsetPane.getStyleClass().clear();
+        sunsetPane.getStyleClass().add("color" + bgNum);
+        
+        sliderBg.getStyleClass().clear();
+        sliderBg.getStyleClass().add("color" + bgNum);
+        
+        city.getStyleClass().clear();
+        city.getStyleClass().add("color" + bgNum);
+        
+        currentC.getStyleClass().clear();
+        currentC.getStyleClass().add("color" + bgNum);
+        
+        currentW.getStyleClass().clear();
+        currentW.getStyleClass().add("color" + bgNum);
+        
+        loadBackground(bgPane, bgNum);
+        
         currentC.setText(Math.round(data.getCurrent().getDouble("temp")) + " " + deg + "C");
         currentW.setText(data.getCurrent().getJSONArray("weather").getJSONObject(0).getString("description"));
         currentW.setWrapText(true);
-        loadIcon(currentIcon, pickIcon(data.getCurrent().getJSONArray("weather").getJSONObject(0).getString("icon")), 150);
+        loadIcon(currentIcon, pickIcon(data.getCurrent().getJSONArray("weather").getJSONObject(0).getString("icon")), 130);
+        currentIcon.getChildren().get(0).setLayoutX(10);
+        currentIcon.getChildren().get(0).setLayoutY(10);
         
         updated.setText(formatTimeFull(data.getCurrent().getInt("dt")));
         feels.setText(Math.round(data.getCurrent().getDouble("feels_like")) + " " + deg + "C");
         
         wind.setText(data.getCurrent().getDouble("wind_speed")+ " km/h");
-        loadIcon(windDeg, 11, 25);
+        loadIcon(windDeg, 11, 20);
         windDeg.getChildren().get(0).setRotate(data.getCurrent().getInt("wind_deg")-225);
         
         int vDistance = data.getCurrent().getInt("visibility");
@@ -343,11 +381,18 @@ public class FXMLDocumentController implements Initializable {
 
                 sliderTimes.getChildren().add(actualTimeLabel);
             }
-            
         }
+        
     }
     
     private void setForecastData(WeatherData data) {
+        int bgNum = pickBg(data.getCurrent().getJSONArray("weather").getJSONObject(0).getString("icon"));
+        
+        for(int i = 0; i < 7; i++) {
+            dayRows.getChildren().get(i).getStyleClass().clear();
+            dayRows.getChildren().get(i).getStyleClass().add("color" + bgNum);
+        }
+        
         ArrayList<Long> temperatures = new ArrayList<>();
         for (int i = 1; i <= 7; i++) {
             temperatures.add(Math.round(data.getDaily().getJSONObject(i).getJSONObject("temp").getDouble("min")));
@@ -358,42 +403,35 @@ public class FXMLDocumentController implements Initializable {
         
         for (int i = 1; i <= 7; i++) {
             Label dayLabel = new Label(formatTimeDay(data.getDaily().getJSONObject(i).getInt("dt")));
-            dayLabel.setLayoutX((i-1)*183);
+            dayLabel.setLayoutX((i-1)*180+10);
             dayLabel.setLayoutY(0);
             dayLabel.setTextFill(Color.WHITE);
-            dayLabel.setStyle("-fx-font-size: 18px");
+            dayLabel.setStyle("-fx-font-size: 20px");
             dailyDays.getChildren().add(dayLabel);
             
             Pane iconPane = new Pane();
             iconPane.setPrefSize(100, 100);
-            iconPane.setLayoutX((i-1)*183);
+            iconPane.setLayoutX((i-1)*180+10);
             iconPane.setLayoutY(0);
             loadIcon(iconPane, pickIcon(data.getDaily().getJSONObject(i).getJSONArray("weather").getJSONObject(0).getString("icon")), 100);
             dailyIcons.getChildren().add(iconPane);
             
-            Label descLabel = new Label(data.getDaily().getJSONObject(i).getJSONArray("weather").getJSONObject(0).getString("description"));
-            descLabel.setLayoutX((i-1)*183);
-            descLabel.setLayoutY(0);
-            descLabel.setTextFill(Color.WHITE);
-            descLabel.setStyle("-fx-font-size: 16px");
-            dailyDesc.getChildren().add(descLabel);
-            
             Pane windPane = new Pane();
-            windPane.setLayoutX((i-1)*183);
+            windPane.setLayoutX((i-1)*180+10);
             windPane.setLayoutY(0);
             windPane.setPrefSize(100, 50);
             
             Label windText = new Label(Math.round(data.getDaily().getJSONObject(i).getDouble("wind_speed")) + " km/h");
-            windText.setStyle("-fx-font-size: 16px");
+            windText.setStyle("-fx-font-size: 18px");
             windText.setTextFill(Color.WHITE);
             windText.setLayoutX(25);
             windText.setLayoutY(0);
             
             Pane windIcon = new Pane();
-            windIcon.setPrefSize(10, 10);
+            windIcon.setPrefSize(15, 15);
             windIcon.setLayoutX(0);
             windIcon.setLayoutY(7);
-            loadIcon(windIcon, 11, 10);
+            loadIcon(windIcon, 11, 15);
             windIcon.getChildren().get(0).setRotate(data.getDaily().getJSONObject(i).getInt("wind_deg"));
             
             windPane.getChildren().add(windText);
@@ -404,18 +442,18 @@ public class FXMLDocumentController implements Initializable {
             int actualMin = (int) Math.round(data.getDaily().getJSONObject(i).getJSONObject("temp").getDouble("min"));
             int actualMinHeight = 300/(maxTemp-minTemp) * (maxTemp-actualMin);
             Label minLabel = new Label(actualMin + " " + deg + "C");
-            minLabel.setLayoutX((i-1)*183);
+            minLabel.setLayoutX((i-1)*180+40);
             minLabel.setLayoutY(actualMinHeight);
             minLabel.setTextFill(Color.WHITE);
-            minLabel.setStyle("-fx-font-size: 16px");
+            minLabel.setStyle("-fx-font-size: 18px");
             
             int actualMax = (int) Math.round(data.getDaily().getJSONObject(i).getJSONObject("temp").getDouble("max"));
             int actualMaxHeight = 300/(maxTemp-minTemp) * (maxTemp-actualMax);
             Label maxLabel = new Label(actualMax + " " + deg + "C");
-            maxLabel.setLayoutX((i-1)*183);
+            maxLabel.setLayoutX((i-1)*180+40);
             maxLabel.setLayoutY(actualMaxHeight);
             maxLabel.setTextFill(Color.WHITE);
-            maxLabel.setStyle("-fx-font-size: 16px");
+            maxLabel.setStyle("-fx-font-size: 18px");
             
             dailyTemp.getChildren().add(minLabel);
             dailyTemp.getChildren().add(maxLabel);
@@ -427,10 +465,10 @@ public class FXMLDocumentController implements Initializable {
                 int nextMax = (int) Math.round(data.getDaily().getJSONObject(i+1).getJSONObject("temp").getDouble("max"));
                 int nextMaxHeight = 300/(maxTemp-minTemp) * (maxTemp-nextMax);
             
-                Line minLine = new Line((i-1)*183, actualMinHeight+50, (i)*183, nextMinHeight+50);
+                Line minLine = new Line((i-1)*180+60, actualMinHeight+50, (i)*180+60, nextMinHeight+50);
                 minLine.setStroke(Color.WHITE);
                 
-                Line maxLine = new Line((i-1)*183, actualMaxHeight+50,(i)*183 , nextMaxHeight+50);
+                Line maxLine = new Line((i-1)*180+60, actualMaxHeight+50,(i)*180+60, nextMaxHeight+50);
                 maxLine.setStroke(Color.WHITE);
                 
                 dailyTemp.getChildren().add(minLine);
@@ -512,14 +550,12 @@ public class FXMLDocumentController implements Initializable {
     }
     
     private static String formatTimeDay(int i) { //format time to "12:34"
-        return new SimpleDateFormat("EEEEEEEE, d/M").format(new Date((long) i * 1000));
+        return new SimpleDateFormat("EEEEEEEE\nd/M").format(new Date((long) i * 1000));
     }
     
     private static String formatTimeShort(int i) {
         return new SimpleDateFormat("K a").format(new Date((long) i * 1000)).toLowerCase();
     }
-    
-    //String sunriseTime = new SimpleDateFormat("HH:mm").format(weatherData.getSunrise());
     
     private static JSONObject parse(String responseBody) {
         JSONObject myjson = new JSONObject(responseBody);
