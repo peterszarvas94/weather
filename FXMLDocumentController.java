@@ -178,7 +178,7 @@ public class FXMLDocumentController implements Initializable {
         refresh.setText(String.valueOf(reload));
         moreBtn.setText("Next week " + arrow_right);
         currentBtn.setText(arrow_left + " Current");
-        getData("47.5000", "19.0833", "7c80f570e5255fa7e8ab6ee9b041e827");
+        getData("47.5000", "19.0833", "api_key");
         WeatherData weatherdata = new WeatherData(json); //create object from json
         setCurrentData(weatherdata); //set first page
         setForecastData(weatherdata);
